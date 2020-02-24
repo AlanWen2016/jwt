@@ -3,7 +3,7 @@ let app = express();
 let bodyParser = require('body-parser');
 let jwt = require('jsonwebtoken');
 app.use((req,res,next)=>{
-    res.header("Access-Control-Allow-Origin", "*"); 
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     if(req.method.toLowerCase() === 'options'){
@@ -12,11 +12,11 @@ app.use((req,res,next)=>{
     next();
 })
 app.use(bodyParser.json());
-let secret = 'zfjg';
+let secret = 'secret';
 app.get('/test',(req,res)=>{
     res.send({
         code:1,
-        data:'用户名不存在'
+        data:'just a test'
     })
 })
 app.post('/login',(req,res)=>{
@@ -26,7 +26,7 @@ app.post('/login',(req,res)=>{
             code:0,
             username:'admin',
             token:jwt.sign({username:'admin'},secret,{
-                expiresIn:20  
+                expiresIn:20
             })
         })
    }else{
@@ -45,15 +45,19 @@ app.get('/validate',(req,res)=>{
                 data:'token失效了'
             })
         }else{
-            res.json({ 
+            res.json({
                 username:decode.username,
-                code:0, // 延长tokne的过期时间
+                code:0, // 延长token的过期时间
                 token:jwt.sign({username:'admin'},secret,{
-                    expiresIn:20  
+                    expiresIn:20
                 })
             })
         }
     });
 });
 
+
+app.get('/',(req,res)=>{
+    res.send('Current page')
+})
 app.listen(3000);
